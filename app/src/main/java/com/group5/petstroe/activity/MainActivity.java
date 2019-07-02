@@ -1,8 +1,10 @@
-package com.group5.petstroe;
+package com.group5.petstroe.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.group5.petstroe.R;
 
 public class MainActivity extends AppCompatActivity {
 
