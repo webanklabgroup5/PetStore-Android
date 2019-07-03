@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.utils.StringUtils;
 
@@ -16,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
 
 public class SignInActivity extends BaseActivity {
 
@@ -33,6 +34,10 @@ public class SignInActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(SignInActivity.this);
+    }
+
+    @Override
+    protected <T> void onUiThread(Result<T> result, int resultCode) {
     }
 
     @OnClick({R.id.btn_sign_in, R.id.tv_sign_up})
@@ -68,7 +73,7 @@ public class SignInActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case CODE_SIGN_UP:
+            case CODE_SIGN_UP_ACTIVITY:
                 break;
             default:
                 break;

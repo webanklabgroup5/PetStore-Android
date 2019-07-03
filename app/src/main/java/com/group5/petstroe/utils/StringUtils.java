@@ -17,4 +17,5 @@ public class StringUtils {
     public static boolean isNotNullOrEmpty(String s) {
         return s != null && s.length() > 0;
     }
+
 }

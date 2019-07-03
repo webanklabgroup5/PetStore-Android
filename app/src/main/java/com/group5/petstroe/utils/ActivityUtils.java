@@ -27,6 +27,6 @@ public class ActivityUtils {
     }
 
     public static final int CODE_MAIN_ACTIVITY = 0;
-    public static final int CODE_SIGN_IN = 1;
-    public static final int CODE_SIGN_UP = 2;
+    public static final int CODE_SIGN_IN_ACTIVITY = 1;
+    public static final int CODE_SIGN_UP_ACTIVITY = 2;
 }
