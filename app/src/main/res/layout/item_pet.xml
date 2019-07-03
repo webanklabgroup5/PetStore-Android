@@ -3,12 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp">
 
     <ImageView
         android:id="@+id/iv_pet_image"
         android:layout_width="120dp"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:src="@mipmap/img"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -18,7 +20,7 @@
         <TextView
             android:id="@+id/tv_pet_name"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="35dp"
             android:gravity="center_vertical"
             android:text="这是名字"
             android:textSize="20dp"
@@ -44,6 +46,11 @@
             android:layout_height="24dp"
             android:gravity="center_vertical"
             android:text="这是主人"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBlack"/>
 
     </LinearLayout>
 

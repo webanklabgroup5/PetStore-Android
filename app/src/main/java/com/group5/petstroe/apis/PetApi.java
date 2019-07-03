@@ -51,4 +51,38 @@ public enum  PetApi {
         });
     }
 
+
+    static class ChangePetStatusForm {
+        int pet_id;
+        int action;
+        String remark;
+        int price;
+
+        ChangePetStatusForm(int pet_id, int action, String remark, int price) {
+            this.pet_id = pet_id;
+            this.action = action;
+            this.remark = remark;
+            this.price = price;
+        }
+    }
+    private Result<Status> changePetStatus(int pet_id, int action, String remark, int price) {
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme(PROTOCOL)
+                .host(HOST)
+                .port(PORT)
+                .encodedPath(PATH_CREATE_PET)
+                .build();
+        GeneralClient<ChangePetStatusForm, Status> client = new GeneralClient<>(url, ChangePetStatusForm.class, Status.class);
+        Result<Status> result = client.post(new ChangePetStatusForm(pet_id, action, remark, price));
+        return  result;
+    }
+    public void changePetStatus(int pet_id, int action, String remark, int price, BaseActivity activity) {
+        ExecutorUtils.getSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                activity.runOnUiThread(changePetStatus(pet_id, action, remark, price), CODE_PET_ACTIVITY);
+            }
+        });
+    }
+
 }
