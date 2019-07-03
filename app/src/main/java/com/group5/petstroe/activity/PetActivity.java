@@ -18,11 +18,13 @@ import com.group5.petstroe.base.BaseActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PetActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView tvAccount;
+    private RecyclerView rvPetsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class PetActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account);
+        rvPetsList = findViewById(R.id.rv_pets_list);
     }
 
     @Override
@@ -75,7 +78,6 @@ public class PetActivity extends BaseActivity
                 shortToast("clicked");
                 break;
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
