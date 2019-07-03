@@ -1,4 +1,6 @@
 package com.group5.petstroe.models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 }

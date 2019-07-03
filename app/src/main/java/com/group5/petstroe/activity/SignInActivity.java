@@ -1,12 +1,12 @@
 package com.group5.petstroe.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
@@ -19,37 +19,37 @@ import butterknife.OnClick;
 
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
 
-public class SignUpActivity extends BaseActivity {
+public class SignInActivity extends BaseActivity {
 
     @BindView(R.id.et_account) EditText etAccount;
-    @BindView(R.id.et_balance) EditText etBalance;
     @BindView(R.id.et_password) EditText etPassword;
-    @BindView(R.id.et_password_confirm) EditText etPasswordConfirm;
-    @BindView(R.id.btn_sign_up) Button btnSignUp;
+    @BindView(R.id.btn_sign_in) Button btnSignIn;
+    @BindView(R.id.tv_sign_up) TextView tvSignUp;
 
     private String account;
-    private String balance;
     private String password;
-    private String passwordConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-        ButterKnife.bind(this);
+        setContentView(R.layout.activity_sign_in);
+        ButterKnife.bind(SignInActivity.this);
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
     }
 
-    @OnClick(R.id.btn_sign_up)
+    @OnClick({R.id.btn_sign_in, R.id.tv_sign_up})
     void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_sign_up:
+            case R.id.btn_sign_in:
                 if (isInfoOk()) {
                     shortToast("ok");
                 }
+                break;
+            case R.id.tv_sign_up:
+                SignUpActivity.startActivityForResult(this);
                 break;
             default:
                 break;
@@ -59,31 +59,28 @@ public class SignUpActivity extends BaseActivity {
     private boolean isInfoOk() {
         account = etAccount.getText().toString().trim();
         if (StringUtils.isNullOrEmpty(account)) {
-            shortToast("用户名不能为空");
-            return false;
-        }
-        balance = etBalance.getText().toString().trim();
-        if (StringUtils.isNullOrEmpty(balance)) {
-            shortToast("开户积分不能为空");
+            shortToast("用户名不能为空！");
             return false;
         }
         password = etPassword.getText().toString().trim();
         if (StringUtils.isNullOrEmpty(password)) {
-            shortToast("请输入密码");
-            return false;
-        }
-        passwordConfirm = etPasswordConfirm.getText().toString().trim();
-        if (StringUtils.isNullOrEmpty(passwordConfirm)) {
-            shortToast("请确认密码");
-            return false;
-        } else if (!passwordConfirm.equals(password)) {
-            shortToast("两次密码不一致");
+            shortToast("请输入密码！");
             return false;
         }
         return true;
     }
 
-    public static void startActivityForResult(Context context) {
-        ((Activity) context).startActivityForResult(new Intent(context, SignUpActivity.class), CODE_SIGN_UP_ACTIVITY);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case CODE_SIGN_UP_ACTIVITY:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void startActivity(Context context) {
+        context.startActivity(new Intent(context, SignInActivity.class));
     }
 }

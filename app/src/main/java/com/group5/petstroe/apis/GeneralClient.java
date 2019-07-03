@@ -24,15 +24,11 @@ public class GeneralClient<Req, Res> {
 
     private GeneralClient() {}
 
-    private GeneralClient(HttpUrl url, Class<Req> reqClass, Class<Res> resClass) {
+    protected GeneralClient(HttpUrl url, Class<Req> reqClass, Class<Res> resClass) {
         this.gson = new Gson();
         this.url = url;
         this.reqClass = reqClass;
         this.resClass = resClass;
-    }
-
-    protected GeneralClient<Req, Res> newClient(HttpUrl url, Class<Req> reqClass, Class<Res> resClass) {
-        return new GeneralClient(url, reqClass, resClass);
     }
 
     private Result<Res> parse(String json) {
