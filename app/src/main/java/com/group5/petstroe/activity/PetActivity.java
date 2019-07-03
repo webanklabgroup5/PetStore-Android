@@ -94,8 +94,13 @@ public class PetActivity extends BaseActivity
                 MyPetActivity.startActivityForResult(this);
                 return true;
             case R.id.nav_order:
+                OrderActivity.startActivityForResult(this);
                 return true;
             case R.id.nav_arbitration:
+                ArbitrationActivity.startActivityForResult(this);
+                return true;
+            case R.id.nav_setting:
+                shortToast("clicked");
                 return true;
             default:
                 shortToast("clicked");

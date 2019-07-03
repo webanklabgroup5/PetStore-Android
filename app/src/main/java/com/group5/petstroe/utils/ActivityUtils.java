@@ -36,4 +36,7 @@ public class ActivityUtils {
     public static final int CODE_CREATE_PET_ACTIVITY = 7;
     public static final int CODE_PET_INFO_ACTIVITY = 8;
     public static final int CODE_CHANGE_PET_STATUS_ACTIVITY = 9;
+    public static final int CODE_ORDER_ACTIVITY = 10;
+    public static final int CODE_ORDER_INFO_ACTIVITY = 11;
+    public static final int CODE_ARBITRATION_ACTIVITY = 12;
 }
