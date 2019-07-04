@@ -14,6 +14,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.group5.petstroe.apis.Constans.CONTENT_TYPE;
+
 public class GeneralClient<Req, Res> {
     private static final String TAG = "GeneralClientTag";
 
@@ -63,7 +65,7 @@ public class GeneralClient<Req, Res> {
 
     protected Result<Res> post(Req req) {
         OkHttpClient client = OkHttpClientUtils.getInstance();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), gson.toJson(req));
+        RequestBody requestBody = RequestBody.create(CONTENT_TYPE, gson.toJson(req));
         Request request = new Request.Builder()
                 .url(this.url)
                 .post(requestBody)

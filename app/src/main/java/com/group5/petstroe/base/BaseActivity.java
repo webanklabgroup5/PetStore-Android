@@ -1,13 +1,14 @@
 package com.group5.petstroe.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.utils.ActivityUtils;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
