@@ -7,23 +7,27 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.petstroe.Adapter.PetItemAdapter;
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.PetApi;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 import com.group5.petstroe.models.Pet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.group5.petstroe.utils.ActivityUtils.CODE_CREATE_PET_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_MY_PET_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_PET_GET_PET_LIST_API;
 
 public class MyPetActivity extends BaseActivity {
 
@@ -40,21 +44,39 @@ public class MyPetActivity extends BaseActivity {
         petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                PetInfoActivity.startActivityForResult(MyPetActivity.this);
+                PetInfoActivity.startActivityForResult( MyPetActivity.this, true, petItemAdapter.getPet(position));
             }
         });
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
-        onUiThread(null, 0);
+
+        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case CODE_CREATE_PET_ACTIVITY:
+                boolean status = data.getBooleanExtra("status", false);
+                if (status) {
+                    PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
-        List<Pet> pets = new ArrayList<>();
-        for (int i = 0; i < 10 ;i++) {
-            pets.add(new Pet());
+        switch (resultCode) {
+            case CODE_PET_GET_PET_LIST_API:
+                List<Pet> pets = (List<Pet>) result.get();
+                petItemAdapter.updateList(pets);
+                break;
+            default:
+                break;
         }
-        petItemAdapter.updateList(pets);
     }
 
     @OnClick(R.id.btn_create_pet)

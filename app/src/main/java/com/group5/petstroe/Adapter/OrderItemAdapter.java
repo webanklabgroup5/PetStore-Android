@@ -76,4 +76,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         orderList = list;
         notifyDataSetChanged();
     }
+
+    public Order getOrder(int position) {
+        return orderList.get(position);
+    }
 }

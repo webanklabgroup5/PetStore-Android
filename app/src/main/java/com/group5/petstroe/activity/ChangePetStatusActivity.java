@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.Pet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,11 +26,16 @@ public class ChangePetStatusActivity extends BaseActivity {
     @BindView(R.id.et_pet_remark) EditText etPetRemark;
     @BindView(R.id.btn_sale) Button btnSale;
 
+    private Pet pet = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pet_status);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        pet = (Pet)intent.getExtras().get("pet");
+        etPetPrice.setText(pet.price);
     }
 
     @Override
@@ -46,8 +52,11 @@ public class ChangePetStatusActivity extends BaseActivity {
         return true;
     }
 
-    public static void startActivityForResult(Context context) {
+    public static void startActivityForResult(Context context, Pet pet) {
         Intent intent = new Intent(context, ChangePetStatusActivity.class);
+        intent.putExtra("pet", pet);
         ((Activity) context).startActivityForResult(intent, CODE_CHANGE_PET_STATUS_ACTIVITY);
     }
+
+    private void finishActivityWithResult() {}
 }

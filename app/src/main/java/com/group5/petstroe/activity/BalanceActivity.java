@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,9 @@ public class BalanceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_balance);
         ButterKnife.bind(this);
+
+        tvAccount.setText(GlobalUser.user.name);
+        tvBalance.setText(GlobalUser.user.balance);
     }
 
     @Override

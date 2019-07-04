@@ -13,17 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.petstroe.Adapter.OrderItemAdapter;
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.OrderApi;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 import com.group5.petstroe.models.Order;
+import com.group5.petstroe.models.Status;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.group5.petstroe.apis.Constans.CODE_ORDER_ARBITRATION_API;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_ORDER_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_ORDER_GET_ORDER_LIST_API;
 
 public class OrderActivity extends BaseActivity {
 
@@ -44,16 +48,26 @@ public class OrderActivity extends BaseActivity {
         });
         rvOrderList.setAdapter(orderItemAdapter);
         rvOrderList.setLayoutManager(new LinearLayoutManager(this));
-        onUiThread(null, 0);
+
+        OrderApi.INSTANCE.getOrderList(GlobalUser.user.id, this);
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
-        List<Order> orders = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            orders.add(new Order());
+        switch (resultCode) {
+            case CODE_ORDER_GET_ORDER_LIST_API:
+                List<Order> orders = (List<Order>) result.get();
+                orderItemAdapter.updateList(orders);
+                break;
+            case CODE_ORDER_ARBITRATION_API:
+                Status status = (Status) result.get();
+                if (status.status == 1) {
+                    OrderApi.INSTANCE.getOrderList(GlobalUser.user.id, this);
+                }
+                break;
+            default:
+                break;
         }
-        orderItemAdapter.updateList(orders);
     }
 
     private void showDialog() {
@@ -63,7 +77,7 @@ public class OrderActivity extends BaseActivity {
         dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                shortToast("click yes");
+                OrderApi.INSTANCE.arbitration(orderItemAdapter.getOrder(i).id, OrderActivity.this);
             }
         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override

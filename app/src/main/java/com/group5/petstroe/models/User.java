@@ -20,4 +20,9 @@ public class User implements Serializable {
     public int getIntId() {
         return Integer.parseInt(this.id);
     }
+
+    @Override
+    public String toString() {
+        return "id:" + id + "; name:" + name + "; type:" + role + "; balance:" + balance + "; petNum:" + pets.size();
+    }
 }

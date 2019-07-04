@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.Status;
 import com.group5.petstroe.utils.StringUtils;
 
 import butterknife.BindView;
@@ -18,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_UP_API;
 
 public class SignUpActivity extends BaseActivity {
 
@@ -41,6 +45,14 @@ public class SignUpActivity extends BaseActivity {
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            case CODE_USER_SIGN_UP_API:
+                shortToast("请求已发送！");
+                finishActivityWithResult();
+                break;
+            default:
+                break;
+        }
     }
 
     @OnClick(R.id.btn_sign_up)
@@ -48,7 +60,7 @@ public class SignUpActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_sign_up:
                 if (isInfoOk()) {
-                    shortToast("ok");
+                    UserApi.INSTANCE.signUp(account, balance, password, this);
                 }
                 break;
             default:
@@ -85,5 +97,9 @@ public class SignUpActivity extends BaseActivity {
 
     public static void startActivityForResult(Context context) {
         ((Activity) context).startActivityForResult(new Intent(context, SignUpActivity.class), CODE_SIGN_UP_ACTIVITY);
+    }
+
+    private void finishActivityWithResult() {
+        finish();
     }
 }

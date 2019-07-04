@@ -1,5 +1,6 @@
 package com.group5.petstroe.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +15,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.group5.petstroe.Adapter.PetItemAdapter;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.StoreApi;
+import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.models.Status;
+import com.group5.petstroe.models.User;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -23,30 +28,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class PetActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import static com.group5.petstroe.apis.Constans.CODE_STORE_GET_ON_SALE_PET_API;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_OUT_API;
+
+public class PetActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView tvAccount;
     private RecyclerView rvPetsList;
     private PetItemAdapter petItemAdapter = new PetItemAdapter();
 
+    private User user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet);
+        Intent intent = getIntent();
+        user = (User)intent.getExtras().get("user");
         initView();
-    }
-
-    @Override
-    protected <T> void onUiThread(Result<T> result, int resultCode) {
-        List<Pet> pets = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            pets.add(new Pet());
-        }
-        petItemAdapter.updateList(pets);
     }
 
     private void initView() {
@@ -60,17 +62,43 @@ public class PetActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account);
+//        (tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account)).setText(user.name);
         rvPetsList = findViewById(R.id.rv_pets_list);
         petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                PetInfoActivity.startActivityForResult(PetActivity.this);
+                PetInfoActivity.startActivityForResult(PetActivity.this, false, petItemAdapter.getPet(position));
             }
         });
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
-        onUiThread(null, 0);
+
+        // 获取市场宠物列表
+//        StoreApi.INSTANCE.getOnSalePet(10, 0, this);
+    }
+
+    @Override
+    protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            case CODE_USER_SIGN_OUT_API:
+                if (result.isOk()) {
+                    Status status = (Status) result.get();
+                    if (status.status == 1) {
+                        finishActivityWithResult(false);
+                    } else {
+                        shortToast("退出登陆失败");
+                    }
+                }
+                break;
+            case CODE_STORE_GET_ON_SALE_PET_API:
+                if (result.isOk()) {
+                    List<Pet> pets = (List<Pet>)result.get();
+                    petItemAdapter.updateList(pets);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -79,7 +107,7 @@ public class PetActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finishActivityWithResult(true);
         }
     }
 
@@ -100,10 +128,9 @@ public class PetActivity extends BaseActivity
                 ArbitrationActivity.startActivityForResult(this);
                 return true;
             case R.id.nav_setting:
-                shortToast("clicked");
+                UserApi.INSTANCE.signOut(this);
                 return true;
             default:
-                shortToast("clicked");
                 break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -111,8 +138,15 @@ public class PetActivity extends BaseActivity
         return true;
     }
 
-    public static void startActivity(Context context) {
+    public static void startActivityForResult(Context context) {
         Intent intent = new Intent(context, PetActivity.class);
-        context.startActivity(intent);
+        ((Activity) context).startActivityForResult(intent, CODE_PET_ACTIVITY);
+    }
+
+    private void finishActivityWithResult(boolean exit) {
+        Intent intent = new Intent();
+        intent.putExtra("exit", exit);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

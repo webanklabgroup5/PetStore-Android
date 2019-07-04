@@ -1,5 +1,8 @@
 package com.group5.petstroe.apis;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.User;
@@ -45,6 +48,7 @@ public enum  UserApi {
                         .build();
                 GeneralClient<SignUpForm, Status> client = new GeneralClient<>(url, SignUpForm.class, Status.class);
                 Result<Status> result = client.post(new SignUpForm(account, balance, password));
+                Log.e("fktag", "url:" + url.toString() + "\n" + (new Gson()).toJson(new SignUpForm(account, balance, password)));
                 activity.runOnUiThread(result, CODE_USER_SIGN_UP_API);
             }
         });
@@ -78,6 +82,7 @@ public enum  UserApi {
                         .build();
                 GeneralClient<SignInForm, SignInResultForm> client = new GeneralClient<>(url, SignInForm.class, SignInResultForm.class);
                 Result<SignInResultForm> result = client.post(new SignInForm(account, password));
+                Log.e("fktag", "url:" + url.toString() + "\n" + (new Gson()).toJson(new SignInForm(account, password)));
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().user), CODE_USER_SIGN_IN_API);
                 } else {

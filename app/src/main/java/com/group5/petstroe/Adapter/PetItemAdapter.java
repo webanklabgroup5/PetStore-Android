@@ -79,4 +79,8 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
         petList = list;
         notifyDataSetChanged();
     }
+
+    public Pet getPet(int position) {
+        return petList.get(position);
+    }
 }

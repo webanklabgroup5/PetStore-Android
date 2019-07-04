@@ -1,8 +1,10 @@
 package com.group5.petstroe.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,14 +12,19 @@ import android.widget.TextView;
 
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
+import com.group5.petstroe.models.User;
 import com.group5.petstroe.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_IN_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_IN_API;
 
 public class SignInActivity extends BaseActivity {
 
@@ -38,6 +45,17 @@ public class SignInActivity extends BaseActivity {
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            case CODE_USER_SIGN_IN_API:
+                if (result.isOk()) {
+                    GlobalUser.user = (User) result.get();
+                    Log.e("fktag", GlobalUser.user.toString());
+                    finishActivityWithResult();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @OnClick({R.id.btn_sign_in, R.id.tv_sign_up})
@@ -45,7 +63,7 @@ public class SignInActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_sign_in:
                 if (isInfoOk()) {
-                    shortToast("ok");
+                    UserApi.INSTANCE.signIn(account, password, this);
                 }
                 break;
             case R.id.tv_sign_up:
@@ -80,7 +98,14 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
-    public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, SignInActivity.class));
+    public static void startActivityForResult(Context context) {
+        Intent intent = new Intent(context, SignInActivity.class);
+        ((Activity) context).startActivityForResult(intent, CODE_SIGN_IN_ACTIVITY);
+    }
+
+    private void finishActivityWithResult() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

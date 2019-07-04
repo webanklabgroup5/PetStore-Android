@@ -1,11 +1,13 @@
 package com.group5.petstroe.apis;
 
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.UrlStatus;
 import com.group5.petstroe.utils.ExecutorUtils;
 
 import java.io.File;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 
@@ -108,6 +110,10 @@ public enum  PetApi {
     }
 
 
+    static class GetPetListResultForm {
+        int status;
+        List<Pet> pet_list;
+    }
     public void getPetList(String id, BaseActivity activity) {
         ExecutorUtils.getSingleThreadExecutor().execute(new Runnable() {
             @Override
@@ -119,9 +125,13 @@ public enum  PetApi {
                         .encodedPath(PATH_GET_PET_LIST)
                         .addEncodedQueryParameter("user_id", id)
                         .build();
-                GeneralClient<Object, Status> client = new GeneralClient<>(url, null, Status.class);
-                Result<Status> result = client.get();
-                activity.runOnUiThread(result, CODE_PET_GET_PET_LIST_API);
+                GeneralClient<Object, GetPetListResultForm> client = new GeneralClient<>(url, null, GetPetListResultForm.class);
+                Result<GetPetListResultForm> result = client.get();
+                if (result.isOk()) {
+                    activity.runOnUiThread(Result.ok(result.get().pet_list), CODE_PET_GET_PET_LIST_API);
+                } else {
+                    activity.runOnUiThread(result, CODE_PET_GET_PET_LIST_API);
+                }
             }
         });
     }
