@@ -8,16 +8,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.PetApi;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.StoreApi;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.models.Status;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.group5.petstroe.apis.Constans.CODE_PET_CHANGE_PET_STATUS_API;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_CHANGE_PET_STATUS_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_INFO_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_STORE_BUY_PET_API;
 
 public class PetInfoActivity extends BaseActivity {
 
@@ -45,18 +53,51 @@ public class PetInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected <T> void onUiThread(Result<T> result, int resultCode) { }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case CODE_CHANGE_PET_STATUS_ACTIVITY:
+                if (requestCode == RESULT_OK) {
+                    boolean status = data.getBooleanExtra("status", false);
+                    if (status) {
+                        finishActivityWithResult(true);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            case CODE_STORE_BUY_PET_API:
+                if (result.isOk()) {
+                    Status status = (Status) result.get();
+                    finishActivityWithResult(status.status == 1);
+                }
+                break;
+            case CODE_PET_CHANGE_PET_STATUS_API:
+                if (result.isOk()) {
+                    Status status = (Status) result.get();
+                    finishActivityWithResult(status.status == 1);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @OnClick(R.id.btn_change_pet_status)
     void onClick() {
         if (isFromMyPet) {
             if (pet.status == 1) {
-                // 下架
+                PetApi.INSTANCE.changePetStatus(pet.id, 0, pet.remark, pet.price, this);
             } else {
                 ChangePetStatusActivity.startActivityForResult(this, pet);
             }
         } else {
-            // 购买
+            StoreApi.INSTANCE.buyPet(pet.id, this);
         }
     }
 
@@ -67,5 +108,10 @@ public class PetInfoActivity extends BaseActivity {
         ((Activity) context).startActivityForResult(intent, CODE_PET_INFO_ACTIVITY);
     }
 
-    private void finishActivityWithResult() {}
+    private void finishActivityWithResult(boolean status) {
+        Intent intent = new Intent();
+        intent.putExtra("status", status);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

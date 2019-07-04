@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -33,6 +34,7 @@ import java.util.List;
 import static com.group5.petstroe.apis.Constans.CODE_STORE_GET_ON_SALE_PET_API;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_ACTIVITY;
 import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_OUT_API;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_INFO_ACTIVITY;
 
 public class PetActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,7 +76,23 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 
         // 获取市场宠物列表
-//        StoreApi.INSTANCE.getOnSalePet(10, 0, this);
+//        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case CODE_PET_INFO_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    boolean status = data.getBooleanExtra("status", false);
+                    if (status) {
+                        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

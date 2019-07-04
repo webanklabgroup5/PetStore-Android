@@ -81,18 +81,18 @@ public enum  PetApi {
 
 
     static class ChangePetStatusForm {
-        int pet_id;
+        String pet_id;
         int action;
         String remark;
         int price;
-        ChangePetStatusForm(int pet_id, int action, String remark, int price) {
+        ChangePetStatusForm(String pet_id, int action, String remark, int price) {
             this.pet_id = pet_id;
             this.action = action;
             this.remark = remark;
             this.price = price;
         }
     }
-    public void changePetStatus(int pet_id, int action, String remark, int price, BaseActivity activity) {
+    public void changePetStatus(String pet_id, int action, String remark, int price, BaseActivity activity) {
         ExecutorUtils.getSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
