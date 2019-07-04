@@ -4,11 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Status implements Serializable {
+public class UrlStatus implements Serializable {
     @SerializedName("status")
     public int status;
-
-    public boolean isOk() {
-        return status == 1;
-    }
+    @SerializedName("url")
+    public String url;
 }

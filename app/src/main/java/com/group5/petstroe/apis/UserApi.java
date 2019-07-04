@@ -1,12 +1,15 @@
 package com.group5.petstroe.apis;
 
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.User;
 import com.group5.petstroe.utils.ExecutorUtils;
 
 import okhttp3.HttpUrl;
 
+import static com.group5.petstroe.apis.Constans.CODE_USER_GET_USER_INFO_API;
 import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_IN_API;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_OUT_API;
 import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_UP_API;
 import static com.group5.petstroe.apis.Constans.HOST;
 import static com.group5.petstroe.apis.Constans.PATH_GET_USER_INFO;
@@ -20,57 +23,71 @@ public enum  UserApi {
     INSTANCE;
 
     static class SignUpForm {
-        String account;
-        String balance;
+        String user_name;
+        String credit;
         String password;
 
         SignUpForm(String account, String balance, String password) {
-            this.account = account;
-            this.balance = balance;
+            this.user_name = account;
+            this.credit = balance;
             this.password = password;
         }
     }
-
-    public void signUp(String account, String balance, String password) {
-        ExecutorUtils.getSingleThreadExecutor().execute(() -> {
-            HttpUrl url = new HttpUrl.Builder()
-                    .scheme(PROTOCOL)
-                    .host(HOST)
-                    .port(PORT)
-                    .encodedPath(PATH_SIGN_UP)
-                    .build();
-            GeneralClient<SignUpForm, Object> client = new GeneralClient<>(url, SignUpForm.class, null);
-            client.post(new SignUpForm(account, balance, password));
+    public void signUp(String account, String balance, String password, BaseActivity activity) {
+        ExecutorUtils.getSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme(PROTOCOL)
+                        .host(HOST)
+                        .port(PORT)
+                        .encodedPath(PATH_SIGN_UP)
+                        .build();
+                GeneralClient<SignUpForm, Status> client = new GeneralClient<>(url, SignUpForm.class, Status.class);
+                Result<Status> result = client.post(new SignUpForm(account, balance, password));
+                activity.runOnUiThread(result, CODE_USER_SIGN_UP_API);
+            }
         });
     }
 
 
     static class SignInForm {
-        String account;
+        String type;
+        String user_name;
         String password;
 
         SignInForm(String account, String password) {
-            this.account = account;
+            this.type = "1";
+            this.user_name = account;
             this.password = password;
         }
     }
-
-    private Result<User> signIn(String account, String password) {
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(PROTOCOL)
-                .host(HOST)
-                .port(PORT)
-                .encodedPath(PATH_SIGN_IN)
-                .build();
-        GeneralClient<SignInForm, User> client = new GeneralClient<>(url, SignInForm.class, User.class);
-        Result<User> result = client.post(new SignInForm(account, password));
-        return result;
+    static class SignInResultForm {
+        int status;
+        User user;
     }
     public void signIn(String account, String password, BaseActivity activity) {
-        ExecutorUtils.getSingleThreadExecutor().execute(() -> activity.runOnUiThread(signIn(account, password), CODE_USER_SIGN_IN_API));
+        ExecutorUtils.getSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme(PROTOCOL)
+                        .host(HOST)
+                        .port(PORT)
+                        .encodedPath(PATH_SIGN_IN)
+                        .build();
+                GeneralClient<SignInForm, SignInResultForm> client = new GeneralClient<>(url, SignInForm.class, SignInResultForm.class);
+                Result<SignInResultForm> result = client.post(new SignInForm(account, password));
+                if (result.isOk()) {
+                    activity.runOnUiThread(Result.ok(result.get().user), CODE_USER_SIGN_IN_API);
+                } else {
+                    activity.runOnUiThread(result, CODE_USER_SIGN_IN_API);
+                }
+            }
+        });
     }
 
-    public void signOut() {
+    public void signOut(BaseActivity activity) {
         ExecutorUtils.getSingleThreadExecutor().execute(() -> {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme(PROTOCOL)
@@ -78,20 +95,23 @@ public enum  UserApi {
                     .port(PORT)
                     .encodedPath(PATH_SIGN_OUT)
                     .build();
-            GeneralClient<Object, Object> client = new GeneralClient<>(url, null, null);
-            client.post(null);
+            GeneralClient<Object, Status> client = new GeneralClient<>(url, null, Status.class);
+            Result<Status> result = client.post(null);
+            activity.runOnUiThread(result, CODE_USER_SIGN_OUT_API);
         });
     }
 
-    private Result<User> getUserInfo(String id) {
+
+    public void getUserInfo(String id, BaseActivity activity) {
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(PROTOCOL)
                 .host(HOST)
                 .port(PORT)
                 .encodedPath(PATH_GET_USER_INFO)
+                .addEncodedQueryParameter("user_id", id)
                 .build();
-        GeneralClient<String, User> client = new GeneralClient<>(url, String.class, User.class);
-        Result<User> result = client.post(id);
-        return result;
+        GeneralClient<Object, User> client = new GeneralClient<>(url, null, User.class);
+        Result<User> result = client.get();
+        activity.runOnUiThread(result, CODE_USER_GET_USER_INFO_API);
     }
 }
