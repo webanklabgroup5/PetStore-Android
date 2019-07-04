@@ -40,7 +40,7 @@ public class MyPetActivity extends BaseActivity {
         petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                PetInfoActivity.startActivityForResult(MyPetActivity.this);
+                PetInfoActivity.startActivityForResult( MyPetActivity.this, true, petItemAdapter.getPet(position));
             }
         });
         rvPetsList.setAdapter(petItemAdapter);

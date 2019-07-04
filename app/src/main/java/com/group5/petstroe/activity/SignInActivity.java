@@ -1,5 +1,6 @@
 package com.group5.petstroe.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.User;
 import com.group5.petstroe.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_IN_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
 
 public class SignInActivity extends BaseActivity {
@@ -80,7 +83,16 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
-    public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, SignInActivity.class));
+    public static void startActivityForResult(Context context) {
+        Intent intent = new Intent(context, SignInActivity.class);
+        ((Activity) context).startActivityForResult(intent, CODE_SIGN_IN_ACTIVITY);
+    }
+
+    private void finishActivityWithResult(boolean result, User user) {
+        Intent intent = new Intent();
+        intent.putExtra("result", result);
+        intent.putExtra("user", user);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

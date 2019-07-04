@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.Pet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,11 +30,18 @@ public class PetInfoActivity extends BaseActivity {
     @BindView(R.id.tv_pet_description) TextView tvPetDescription;
     @BindView(R.id.btn_change_pet_status) Button btnChangePetStatus;
 
+    private boolean isFromMyPet = false;
+    private Pet pet = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_info);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        isFromMyPet = intent.getBooleanExtra("isFromMyPet", false);
+        pet = (Pet)intent.getExtras().get("pet");
+        btnChangePetStatus.setText(isFromMyPet ? pet.status == 1 ? "上架" : "下架" : "购买");
     }
 
     @Override
@@ -41,11 +49,23 @@ public class PetInfoActivity extends BaseActivity {
 
     @OnClick(R.id.btn_change_pet_status)
     void onClick() {
-        ChangePetStatusActivity.startActivityForResult(this);
+        if (isFromMyPet) {
+            if (pet.status == 1) {
+                // 下架
+            } else {
+                ChangePetStatusActivity.startActivityForResult(this, pet);
+            }
+        } else {
+            // 购买
+        }
     }
 
-    public static void startActivityForResult(Context context) {
+    public static void startActivityForResult(Context context, boolean isFromMyPet, Pet pet) {
         Intent intent = new Intent(context, PetInfoActivity.class);
+        intent.putExtra("isFromMyPet", isFromMyPet);
+        intent.putExtra("pet", pet);
         ((Activity) context).startActivityForResult(intent, CODE_PET_INFO_ACTIVITY);
     }
+
+    private void finishActivityWithResult() {}
 }

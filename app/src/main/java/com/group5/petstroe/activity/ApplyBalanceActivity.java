@@ -49,4 +49,6 @@ public class ApplyBalanceActivity extends BaseActivity {
         Intent intent = new Intent(context, ApplyBalanceActivity.class);
         ((Activity) context).startActivityForResult(intent, CODE_APPLY_BALANCE_ACTIVITY);
     }
+
+    private void finishActivityWithResult() { }
 }
