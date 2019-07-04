@@ -1,5 +1,8 @@
 package com.group5.petstroe.apis;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Order;
 import com.group5.petstroe.models.Status;
@@ -39,6 +42,8 @@ public enum OrderApi {
                         .build();
                 GeneralClient<Object, GetOrderListResultForm> client = new GeneralClient<>(url, null, GetOrderListResultForm.class);
                 Result<GetOrderListResultForm> result = client.get();
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().trade_list), CODE_ORDER_GET_ORDER_LIST_API);
                 } else {
@@ -66,6 +71,8 @@ public enum OrderApi {
                         .build();
                 GeneralClient<ArbitrationForm, Status> client = new GeneralClient<>(url, null, Status.class);
                 Result<Status> result = client.post(new ArbitrationForm(id));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_ORDER_ARBITRATION_API);
             }
         });
@@ -85,6 +92,8 @@ public enum OrderApi {
                         .build();
                 GeneralClient<Object, Order> client = new GeneralClient<>(url, null, Order.class);
                 Result<Order> result = client.get();
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_ORDER_GET_ARBITRATION_LIST_API);
             }
         });

@@ -41,6 +41,8 @@ public class SignInActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(SignInActivity.this);
+        etAccount.setText("mzw");
+        etPassword.setText("mzwmzw");
     }
 
     @Override

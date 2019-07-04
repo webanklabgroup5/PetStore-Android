@@ -1,5 +1,8 @@
 package com.group5.petstroe.apis;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
@@ -39,6 +42,8 @@ public enum StoreApi {
                         .build();
                 GeneralClient<Object, GetOnSalePetResultForm> client = new GeneralClient<>(url, null, GetOnSalePetResultForm.class);
                 Result<GetOnSalePetResultForm> result = client.get();
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().pet_list), CODE_STORE_GET_ON_SALE_PET_API);
                 } else {
@@ -66,6 +71,8 @@ public enum StoreApi {
                         .build();
                 GeneralClient<BuyPetForm, Status> client = new GeneralClient<>(url, BuyPetForm.class, Status.class);
                 Result<Status> result = client.post(new BuyPetForm(id));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_STORE_BUY_PET_API);
             }
         });

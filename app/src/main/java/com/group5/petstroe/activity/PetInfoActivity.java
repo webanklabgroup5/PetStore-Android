@@ -49,7 +49,12 @@ public class PetInfoActivity extends BaseActivity {
         Intent intent = getIntent();
         isFromMyPet = intent.getBooleanExtra("isFromMyPet", false);
         pet = (Pet)intent.getExtras().get("pet");
+        tvPetStatus.setText(isFromMyPet ? pet.status == 1 ? "上架" : "下架" : "上架");
         btnChangePetStatus.setText(isFromMyPet ? pet.status == 1 ? "上架" : "下架" : "购买");
+        tvPetName.setText(pet.name);
+        tvPetSpecies.setText(pet.getSpecies());
+        tvPetBirthday.setText(pet.birthday);
+        tvPetOwner.setText(pet.owner.name);
     }
 
     @Override

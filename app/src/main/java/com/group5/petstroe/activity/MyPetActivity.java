@@ -50,7 +50,7 @@ public class MyPetActivity extends BaseActivity {
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 
-        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+//        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
     }
 
     @Override

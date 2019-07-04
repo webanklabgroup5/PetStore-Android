@@ -1,5 +1,8 @@
 package com.group5.petstroe.apis;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
@@ -46,6 +49,8 @@ public enum  PetApi {
                         .build();
                 GeneralClient<UploadFileForm, UrlStatus> client = new GeneralClient<>(url, UploadFileForm.class, UrlStatus.class);
                 Result<UrlStatus> result = client.post(new UploadFileForm(file));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_APP_UPLOAD_FILE_API);
             }
         });
@@ -75,6 +80,8 @@ public enum  PetApi {
                     .build();
             GeneralClient<CreatePetForm, Status> client = new GeneralClient<>(url, CreatePetForm.class, Status.class);
             Result<Status> result = client.post(new CreatePetForm(name, species, photo, birthday, description));
+            Log.e("fktag", "url:" + url.toString());
+            Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
             activity.runOnUiThread(result, CODE_PET_CREATE_PET_API);
         });
     }
@@ -104,6 +111,8 @@ public enum  PetApi {
                         .build();
                 GeneralClient<ChangePetStatusForm, Status> client = new GeneralClient<>(url, ChangePetStatusForm.class, Status.class);
                 Result<Status> result = client.post(new ChangePetStatusForm(pet_id, action, remark, price));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_PET_CHANGE_PET_STATUS_API);
             }
         });
@@ -127,6 +136,8 @@ public enum  PetApi {
                         .build();
                 GeneralClient<Object, GetPetListResultForm> client = new GeneralClient<>(url, null, GetPetListResultForm.class);
                 Result<GetPetListResultForm> result = client.get();
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().pet_list), CODE_PET_GET_PET_LIST_API);
                 } else {

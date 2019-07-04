@@ -57,16 +57,16 @@ public class ArbitrationItemAdapter extends RecyclerView.Adapter<ArbitrationItem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = arbitrationList.get(position);
-//        holder.tvPetName.setText(order.pet.name);
-//        holder.tvPetSpecies.setText(order.pet.getSpecies());
-//        holder.tvPetPrice.setText(order.price);
-//        holder.tvStatus.setText(order.getStatus());
+        holder.tvPetName.setText(order.pet.name);
+        holder.tvPetSpecies.setText(order.pet.getSpecies());
+        holder.tvPetPrice.setText(order.price +"");
+        holder.tvStatus.setText(order.getStatus());
         holder.itemView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return arbitrationList.size();
+        return arbitrationList == null ? 0 : arbitrationList.size();
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {

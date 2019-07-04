@@ -158,6 +158,7 @@ public class CreatePetActivity extends BaseActivity {
     }
 
     private boolean isInfoOk() {
+        petImageUrl = "http://ali.theproudsoul.cn:22222/petshop/pet/ll.png";
         if (StringUtils.isNullOrEmpty(petImageUrl)) {
             shortToast("请选择宠物图片");
             return false;

@@ -56,12 +56,15 @@ public class ArbitrationActivity extends BaseActivity {
             case CODE_ORDER_GET_ORDER_LIST_API:
                 List<Order> orders = (List<Order>) result.get();
                 List<Order> arbitrations = new ArrayList<>();
-                for (Order order : orders) {
-                    if (order.status != 0) {
-                        arbitrations.add(order);
+                if (orders != null) {
+                    for (Order order : orders) {
+                        if (order.status != 0) {
+                            arbitrations.add(order);
+                        }
                     }
+                    arbitrationItemAdapter.updateList(arbitrations);
                 }
-                arbitrationItemAdapter.updateList(arbitrations);
+                tvArbitrationNumber.setText(arbitrationItemAdapter.getItemCount() + "");
                 break;
             default:
                 break;

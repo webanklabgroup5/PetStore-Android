@@ -19,6 +19,7 @@ import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.apis.StoreApi;
 import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.User;
@@ -42,14 +43,10 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
     private RecyclerView rvPetsList;
     private PetItemAdapter petItemAdapter = new PetItemAdapter();
 
-    private User user = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet);
-        Intent intent = getIntent();
-        user = (User)intent.getExtras().get("user");
         initView();
     }
 
@@ -64,7 +61,7 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-//        (tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account)).setText(user.name);
+        (tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account)).setText(GlobalUser.user.name);
         rvPetsList = findViewById(R.id.rv_pets_list);
         petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
             @Override
@@ -76,7 +73,7 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 
         // 获取市场宠物列表
-//        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
     }
 
     @Override
@@ -112,6 +109,7 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
                 if (result.isOk()) {
                     List<Pet> pets = (List<Pet>)result.get();
                     petItemAdapter.updateList(pets);
+//                    shortToast(pets.size() + "");
                 }
                 break;
             default:

@@ -58,6 +58,7 @@ public class OrderActivity extends BaseActivity {
             case CODE_ORDER_GET_ORDER_LIST_API:
                 List<Order> orders = (List<Order>) result.get();
                 orderItemAdapter.updateList(orders);
+                tvOrderNumber.setText(orderItemAdapter.getItemCount() + "");
                 break;
             case CODE_ORDER_ARBITRATION_API:
                 Status status = (Status) result.get();

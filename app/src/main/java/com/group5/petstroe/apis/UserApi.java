@@ -48,7 +48,8 @@ public enum  UserApi {
                         .build();
                 GeneralClient<SignUpForm, Status> client = new GeneralClient<>(url, SignUpForm.class, Status.class);
                 Result<Status> result = client.post(new SignUpForm(account, balance, password));
-                Log.e("fktag", "url:" + url.toString() + "\n" + (new Gson()).toJson(new SignUpForm(account, balance, password)));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 activity.runOnUiThread(result, CODE_USER_SIGN_UP_API);
             }
         });
@@ -82,7 +83,8 @@ public enum  UserApi {
                         .build();
                 GeneralClient<SignInForm, SignInResultForm> client = new GeneralClient<>(url, SignInForm.class, SignInResultForm.class);
                 Result<SignInResultForm> result = client.post(new SignInForm(account, password));
-                Log.e("fktag", "url:" + url.toString() + "\n" + (new Gson()).toJson(new SignInForm(account, password)));
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().user), CODE_USER_SIGN_IN_API);
                 } else {
@@ -102,6 +104,8 @@ public enum  UserApi {
                     .build();
             GeneralClient<Object, Status> client = new GeneralClient<>(url, null, Status.class);
             Result<Status> result = client.post(null);
+            Log.e("fktag", "url:" + url.toString());
+            Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
             activity.runOnUiThread(result, CODE_USER_SIGN_OUT_API);
         });
     }
@@ -117,6 +121,8 @@ public enum  UserApi {
                 .build();
         GeneralClient<Object, User> client = new GeneralClient<>(url, null, User.class);
         Result<User> result = client.get();
+        Log.e("fktag", "url:" + url.toString());
+        Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
         activity.runOnUiThread(result, CODE_USER_GET_USER_INFO_API);
     }
 }

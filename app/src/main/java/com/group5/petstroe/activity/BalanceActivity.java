@@ -32,7 +32,7 @@ public class BalanceActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         tvAccount.setText(GlobalUser.user.name);
-        tvBalance.setText(GlobalUser.user.balance);
+        tvBalance.setText(GlobalUser.user.balance + "");
     }
 
     @Override

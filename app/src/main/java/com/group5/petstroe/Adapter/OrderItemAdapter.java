@@ -55,15 +55,15 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = orderList.get(position);
-//        holder.tvPetName.setText(order.pet.name);
-//        holder.tvPetSpecies.setText(order.pet.getSpecies());
-//        holder.tvPetPrice.setText(order.price);
+        holder.tvPetName.setText(order.pet.name);
+        holder.tvPetSpecies.setText(order.pet.getSpecies());
+        holder.tvPetPrice.setText(order.price +"");
         holder.itemView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return orderList.size();
+        return orderList == null ? 0 : orderList.size();
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
