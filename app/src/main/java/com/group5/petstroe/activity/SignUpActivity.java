@@ -40,15 +40,14 @@ public class SignUpActivity extends BaseActivity {
     }
 
     @Override
-    protected <T> void onUiThread(Result<T> result, int resultCode) {
-    }
+    protected <T> void onUiThread(Result<T> result, int resultCode) { }
 
     @OnClick(R.id.btn_sign_up)
     void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_sign_up:
                 if (isInfoOk()) {
-                    shortToast("ok");
+                    shortToast("sign up");
                 }
                 break;
             default:
@@ -86,4 +85,6 @@ public class SignUpActivity extends BaseActivity {
     public static void startActivityForResult(Context context) {
         ((Activity) context).startActivityForResult(new Intent(context, SignUpActivity.class), CODE_SIGN_UP_ACTIVITY);
     }
+
+    private void finishActivityWithResult() { }
 }

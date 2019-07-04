@@ -1,5 +1,6 @@
 package com.group5.petstroe.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import com.group5.petstroe.Adapter.PetItemAdapter;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
-import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.models.User;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -23,30 +24,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_ACTIVITY;
 
-public class PetActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class PetActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView tvAccount;
     private RecyclerView rvPetsList;
     private PetItemAdapter petItemAdapter = new PetItemAdapter();
 
+    private User user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet);
+        Intent intent = getIntent();
+        user = (User)intent.getExtras().get("user");
         initView();
-    }
-
-    @Override
-    protected <T> void onUiThread(Result<T> result, int resultCode) {
-        List<Pet> pets = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            pets.add(new Pet());
-        }
-        petItemAdapter.updateList(pets);
     }
 
     private void initView() {
@@ -60,17 +54,26 @@ public class PetActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account);
+        (tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account)).setText(user.name);
         rvPetsList = findViewById(R.id.rv_pets_list);
         petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                PetInfoActivity.startActivityForResult(PetActivity.this);
+                PetInfoActivity.startActivityForResult(PetActivity.this, false, petItemAdapter.getPet(position));
             }
         });
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
-        onUiThread(null, 0);
+
+        // 获取市场宠物列表
+    }
+
+    @Override
+    protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            default:
+                break;
+        }
     }
 
     @Override
@@ -79,7 +82,7 @@ public class PetActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finishActivityWithResult();
         }
     }
 
@@ -103,7 +106,6 @@ public class PetActivity extends BaseActivity
                 shortToast("clicked");
                 return true;
             default:
-                shortToast("clicked");
                 break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -111,8 +113,15 @@ public class PetActivity extends BaseActivity
         return true;
     }
 
-    public static void startActivity(Context context) {
+    public static void startActivityForResult(Context context, User user) {
         Intent intent = new Intent(context, PetActivity.class);
-        context.startActivity(intent);
+        intent.putExtra("user", user);
+        ((Activity) context).startActivityForResult(intent, CODE_PET_ACTIVITY);
+    }
+
+    private void finishActivityWithResult() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
