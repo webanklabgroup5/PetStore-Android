@@ -51,6 +51,12 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+    }
+
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,7 +96,6 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
                 }
                 break;
             default:
-                StoreApi.INSTANCE.getOnSalePet(999, 0, this);
                 break;
         }
     }
