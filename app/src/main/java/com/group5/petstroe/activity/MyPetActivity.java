@@ -66,15 +66,16 @@ public class MyPetActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case CODE_CREATE_PET_ACTIVITY:
-                if (requestCode == RESULT_OK) {
-                    boolean status0 = data.getBooleanExtra("status", false);
-                    if (status0) {
-                        /**
-                         * 创建宠物成功，刷新列表
-                         */
-                        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
-                    }
-                }
+//                if (requestCode == RESULT_OK) {
+//                    boolean status0 = data.getBooleanExtra("status", false);
+//                    if (status0) {
+//                        /**
+//                         * 创建宠物成功，刷新列表
+//                         */
+//                        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+//                    }
+//                }
+                PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
                 break;
             case CODE_PET_INFO_ACTIVITY:
                 if (resultCode == RESULT_OK) {
@@ -100,6 +101,7 @@ public class MyPetActivity extends BaseActivity {
                     zlog("获取用户宠物列表 ok");
                     List<Pet> pets = (List<Pet>) result.get();
                     petItemAdapter.updateList(pets);
+                    tvPetNumber.setText(petItemAdapter.getItemCount() + "");
                 } else {
                     zlog("获取用户宠物列表 error");
                 }

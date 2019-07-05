@@ -17,8 +17,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:text="用户名"
                 android:textColor="@color/colorBlack"/>
@@ -26,7 +26,7 @@
             <EditText
                 android:id="@+id/et_account"
                 android:layout_width="240dp"
-                android:layout_height="40dp" />
+                android:layout_height="50dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -35,8 +35,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:text="开户积分"
                 android:textColor="@color/colorBlack"/>
@@ -44,7 +44,7 @@
             <EditText
                 android:id="@+id/et_balance"
                 android:layout_width="240dp"
-                android:layout_height="40dp" />
+                android:layout_height="50dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -53,8 +53,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:text="密码"
                 android:textColor="@color/colorBlack"/>
@@ -62,7 +62,7 @@
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="240dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:password="true"/>
         </LinearLayout>
 
@@ -72,8 +72,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:text="确认密码"
                 android:textColor="@color/colorBlack"/>
@@ -81,14 +81,14 @@
             <EditText
                 android:id="@+id/et_password_confirm"
                 android:layout_width="240dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:password="true"/>
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_sign_up"
             android:layout_width="280dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:text="提交申请"/>
 
