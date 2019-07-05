@@ -97,10 +97,11 @@ public class GeneralClient<Req, Res> {
         OkHttpClient client = OkHttpClientUtils.getInstance();
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("photo", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data;application/octet-stream;"), file))
+                .addFormDataPart("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data;application/octet-stream;"), file))
                 .build();
         Request request = new Request.Builder()
                 .url(this.url)
+                .addHeader("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZ2xhc3Nlcy1kZXYua3NoLmZ1blwvYXBpXC9hdXRoXC91c2Vyc1wvbG9naW4iLCJpYXQiOjE1NjIxMTMwNjMsImV4cCI6MTU5ODExMzA2MywibmJmIjoxNTYyMTEzMDYzLCJqdGkiOiJiSm1ST2s0YkdUcTRDdDVxIiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.ONB-HYJWZU6mfbKxKoJc7u8Ttbn2KTVSwPcvmKmfitQ")
                 .post(multipartBody)
                 .build();
         String s = request.body().contentType().toString();

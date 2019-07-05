@@ -27,6 +27,7 @@ import com.group5.petstroe.R;
 import com.group5.petstroe.apis.PetApi;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.DataUrlStatus;
 import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.UrlStatus;
 import com.group5.petstroe.utils.StringUtils;
@@ -105,8 +106,8 @@ public class CreatePetActivity extends BaseActivity {
             case CODE_APP_UPLOAD_FILE_API:
                 if (result.isOk()) {
                     zlog("上传图片 ok");
-                    UrlStatus urlStatus = (UrlStatus) result.get();
-                    petImageUrl = urlStatus.url;
+                    DataUrlStatus dataUrlStatus = (DataUrlStatus) result.get();
+                    petImageUrl = dataUrlStatus.data.url;
                     if (StringUtils.isNotNullOrEmpty(petImageUrl)) {
                         ivPetImage.setImageBitmap(petImageBitmap);
                     }

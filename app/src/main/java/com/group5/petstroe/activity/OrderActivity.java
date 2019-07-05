@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,7 +41,7 @@ public class OrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         ButterKnife.bind(this);
-        orderItemAdapter.setOnItemClickListener(position -> showDialog());
+        orderItemAdapter.setOnItemClickListener(position -> showTheDialog(position));
         orderItemAdapter.setActivity(this);
         rvOrderList.setAdapter(orderItemAdapter);
         rvOrderList.setLayoutManager(new LinearLayoutManager(this));
@@ -70,14 +71,16 @@ public class OrderActivity extends BaseActivity {
         }
     }
 
-    private void showDialog() {
+    private void showTheDialog(int position) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("仲裁");
         dialog.setMessage("对这起交易发起仲裁？");
         dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                OrderApi.INSTANCE.arbitration(orderItemAdapter.getOrder(i).id, OrderActivity.this);
+                Log.e("fktag", "orders number: " + orderItemAdapter.getItemCount());
+                Log.e("fktag", "orders item: " + i);
+                OrderApi.INSTANCE.arbitration(orderItemAdapter.getOrder(position).id, OrderActivity.this);
             }
         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override

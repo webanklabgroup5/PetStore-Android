@@ -17,6 +17,7 @@ import com.group5.petstroe.apis.StoreApi;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
+import com.group5.petstroe.utils.ImageUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +56,7 @@ public class PetInfoActivity extends BaseActivity {
         pet = (Pet)intent.getExtras().get("pet");
         tvPetStatus.setText(isFromMyPet ? pet.status == 1 ? "上架" : "下架" : "上架");
         btnChangePetStatus.setText(isFromMyPet ? pet.status == 1 ? "下架" : "上架" : "购买");
+        ImageUtils.loadImageFromUrl(this, ivPetImage, pet.url);
         tvPetName.setText(pet.name);
         tvPetSpecies.setText(pet.getSpecies());
         tvPetBirthday.setText(pet.birthday);

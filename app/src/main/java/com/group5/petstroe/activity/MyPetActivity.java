@@ -77,12 +77,14 @@ public class MyPetActivity extends BaseActivity {
                 }
                 break;
             case CODE_PET_INFO_ACTIVITY:
-                boolean status1 = data.getBooleanExtra("status", false);
-                if (status1) {
-                    /**
-                     * 上下架宠物成功，刷新列表
-                     */
-                    PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+                if (resultCode == RESULT_OK) {
+                    boolean status1 = data.getBooleanExtra("status", false);
+                    if (status1) {
+                        /**
+                         * 上下架宠物成功，刷新列表
+                         */
+                        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+                    }
                 }
                 break;
             default:

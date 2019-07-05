@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.models.DataUrlStatus;
 import com.group5.petstroe.models.Pet;
 import com.group5.petstroe.models.Status;
 import com.group5.petstroe.models.UrlStatus;
@@ -42,15 +43,18 @@ public enum  PetApi {
             @Override
             public void run() {
                 HttpUrl url = new HttpUrl.Builder()
-                        .scheme(PROTOCOL)
-                        .host(HOST)
-                        .port(PORT)
-                        .encodedPath(PATH_APP_UPLOAD_FILE)
+                        .scheme("https")
+                        .host("glasses-dev.ksh.fun")
+                        .encodedPath("/api/files")
+//                        .scheme(PROTOCOL)
+//                        .host(HOST)
+//                        .port(PORT)
+//                        .encodedPath(PATH_APP_UPLOAD_FILE)
                         .build();
-                GeneralClient<UploadFileForm, UrlStatus> client = new GeneralClient<>(url, UploadFileForm.class, UrlStatus.class);
+                GeneralClient<UploadFileForm, DataUrlStatus> client = new GeneralClient<>(url, UploadFileForm.class, DataUrlStatus.class);
                 UploadFileForm postForm = new UploadFileForm(file);
 //                Result<UrlStatus> result = client.post(postForm);
-                Result<UrlStatus> result = client.uploadPost(file);
+                Result<DataUrlStatus> result = client.uploadPost(file);
                 {
                     Log.e("fktag", "url:" + url.toString());
 //                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));

@@ -88,12 +88,14 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case CODE_PET_INFO_ACTIVITY:
-                boolean status0 = data.getBooleanExtra("status", false);
-                /**
-                 * 购买成功，刷新列表
-                 */
-                if (status0) {
-                    StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+                if (resultCode == RESULT_OK) {
+                    boolean status0 = data.getBooleanExtra("status", false);
+                    /**
+                     * 购买成功，刷新列表
+                     */
+                    if (status0) {
+                        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+                    }
                 }
                 break;
             default:
