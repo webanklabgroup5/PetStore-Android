@@ -41,6 +41,7 @@ public class OrderActivity extends BaseActivity {
         setContentView(R.layout.activity_order);
         ButterKnife.bind(this);
         orderItemAdapter.setOnItemClickListener(position -> showDialog());
+        orderItemAdapter.setActivity(this);
         rvOrderList.setAdapter(orderItemAdapter);
         rvOrderList.setLayoutManager(new LinearLayoutManager(this));
 

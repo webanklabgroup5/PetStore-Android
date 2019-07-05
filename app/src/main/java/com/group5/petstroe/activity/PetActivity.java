@@ -76,6 +76,7 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
              */
             PetInfoActivity.startActivityForResult(PetActivity.this, false, petItemAdapter.getPet(position));
         });
+        petItemAdapter.setActivity(this);
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 

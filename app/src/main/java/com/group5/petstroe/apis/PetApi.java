@@ -49,10 +49,11 @@ public enum  PetApi {
                         .build();
                 GeneralClient<UploadFileForm, UrlStatus> client = new GeneralClient<>(url, UploadFileForm.class, UrlStatus.class);
                 UploadFileForm postForm = new UploadFileForm(file);
-                Result<UrlStatus> result = client.post(postForm);
+//                Result<UrlStatus> result = client.post(postForm);
+                Result<UrlStatus> result = client.uploadPost(file);
                 {
                     Log.e("fktag", "url:" + url.toString());
-                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+//                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
                     Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
                 }
                 activity.runOnUiThread(result, CODE_APP_UPLOAD_FILE_API);

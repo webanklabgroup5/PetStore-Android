@@ -54,6 +54,7 @@ public class SignInActivity extends BaseActivity {
             case CODE_USER_SIGN_IN_API:
                 if (result.isOk()) {
                     zlog("sign in result ok");
+
                     GlobalUser.user = (User) result.get();
                     finishActivityWithResult();
                 } else {

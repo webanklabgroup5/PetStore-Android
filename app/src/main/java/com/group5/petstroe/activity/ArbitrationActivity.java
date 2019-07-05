@@ -44,6 +44,7 @@ public class ArbitrationActivity extends BaseActivity {
                 shortToast("click " + position);
             }
         });
+        arbitrationItemAdapter.setActivity(this);
         rvArbitrationList.setAdapter(arbitrationItemAdapter);
         rvArbitrationList.setLayoutManager(new LinearLayoutManager(this));
 

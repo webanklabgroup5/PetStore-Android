@@ -52,6 +52,7 @@ public class MyPetActivity extends BaseActivity {
                 PetInfoActivity.startActivityForResult( MyPetActivity.this, true, petItemAdapter.getPet(position));
             }
         });
+        petItemAdapter.setActivity(this);
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -65,12 +66,14 @@ public class MyPetActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case CODE_CREATE_PET_ACTIVITY:
-                boolean status0 = data.getBooleanExtra("status", false);
-                if (status0) {
-                    /**
-                     * 创建宠物成功，刷新列表
-                     */
-                    PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+                if (requestCode == RESULT_OK) {
+                    boolean status0 = data.getBooleanExtra("status", false);
+                    if (status0) {
+                        /**
+                         * 创建宠物成功，刷新列表
+                         */
+                        PetApi.INSTANCE.getPetList(GlobalUser.user.id, this);
+                    }
                 }
                 break;
             case CODE_PET_INFO_ACTIVITY:
