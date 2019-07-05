@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 import com.group5.petstroe.models.User;
 import com.group5.petstroe.utils.StringUtils;
 
@@ -21,6 +24,7 @@ import butterknife.OnClick;
 
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_IN_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_SIGN_UP_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_IN_API;
 
 public class SignInActivity extends BaseActivity {
 
@@ -37,20 +41,45 @@ public class SignInActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(SignInActivity.this);
+        etAccount.setText("zpf");
+        etPassword.setText("zpfzpf");
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            /**
+             * 登录回调
+             */
+            case CODE_USER_SIGN_IN_API:
+                if (result.isOk()) {
+                    zlog("sign in result ok");
+
+                    GlobalUser.user = (User) result.get();
+                    finishActivityWithResult();
+                } else {
+                    zlog("sign in result error");
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @OnClick({R.id.btn_sign_in, R.id.tv_sign_up})
     void onClick(View view) {
         switch (view.getId()) {
+            /**
+             * 点击登录
+             */
             case R.id.btn_sign_in:
                 if (isInfoOk()) {
-                    shortToast("ok");
+                    UserApi.INSTANCE.signIn(account, password, this);
                 }
                 break;
+            /**
+             * 点击跳转开户页面
+             */
             case R.id.tv_sign_up:
                 SignUpActivity.startActivityForResult(this);
                 break;
@@ -59,6 +88,10 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 判断登录信息是否有效
+     * @return
+     */
     private boolean isInfoOk() {
         account = etAccount.getText().toString().trim();
         if (StringUtils.isNullOrEmpty(account)) {
@@ -88,11 +121,7 @@ public class SignInActivity extends BaseActivity {
         ((Activity) context).startActivityForResult(intent, CODE_SIGN_IN_ACTIVITY);
     }
 
-    private void finishActivityWithResult(boolean result, User user) {
-        Intent intent = new Intent();
-        intent.putExtra("result", result);
-        intent.putExtra("user", user);
-        setResult(RESULT_OK, intent);
+    private void finishActivityWithResult() {
         finish();
     }
 }

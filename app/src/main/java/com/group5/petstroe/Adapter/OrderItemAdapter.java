@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.petstroe.R;
+import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Order;
+import com.group5.petstroe.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         void onItemClick(int position);
     }
 
+    private BaseActivity activity = null;
     private List<Order> orderList = new ArrayList<>();
     private onItemClickListener onItemClickListener;
 
@@ -55,15 +58,16 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = orderList.get(position);
-//        holder.tvPetName.setText(order.pet.name);
-//        holder.tvPetSpecies.setText(order.pet.getSpecies());
-//        holder.tvPetPrice.setText(order.price);
+        ImageUtils.loadImageFromUrl(this.activity, holder.ivPetImage, order.pet.url);
+        holder.tvPetName.setText(order.pet.name);
+        holder.tvPetSpecies.setText(order.pet.getSpecies());
+        holder.tvPetPrice.setText(order.price +"");
         holder.itemView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return orderList.size();
+        return orderList == null ? 0 : orderList.size();
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
@@ -72,8 +76,18 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         }
     }
 
+    public void setActivity(BaseActivity activity) {
+        if (activity != null) {
+            this.activity = activity;
+        }
+    }
+
     public void updateList(List<Order> list) {
         orderList = list;
         notifyDataSetChanged();
+    }
+
+    public Order getOrder(int position) {
+        return orderList.get(position);
     }
 }

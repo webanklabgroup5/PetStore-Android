@@ -9,15 +9,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.PetApi;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.models.Status;
+import com.group5.petstroe.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.group5.petstroe.utils.ActivityUtils.CODE_CHANGE_PET_STATUS_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_PET_CHANGE_PET_STATUS_API;
 
 public class ChangePetStatusActivity extends BaseActivity {
 
@@ -27,6 +31,8 @@ public class ChangePetStatusActivity extends BaseActivity {
     @BindView(R.id.btn_sale) Button btnSale;
 
     private Pet pet = null;
+    private String petPrice;
+    private String petRemark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +41,43 @@ public class ChangePetStatusActivity extends BaseActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
         pet = (Pet)intent.getExtras().get("pet");
-        etPetPrice.setText(pet.price);
+        etPetPrice.setText(pet.price + "");
     }
 
     @Override
-    protected <T> void onUiThread(Result<T> result, int resultCode) { }
+    protected <T> void onUiThread(Result<T> result, int resultCode) {
+        switch (resultCode) {
+            case CODE_PET_CHANGE_PET_STATUS_API:
+                if (result.isOk()) {
+                    zlog("上架宠物 ok");
+                    Status status = (Status) result.get();
+                    finishActivityWithResult(status.status == 1);
+                } else {
+                    zlog("上架宠物 error");
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @OnClick(R.id.btn_sale)
     void onClick() {
         if (isInfoOk()) {
-            shortToast("clicked");
+            PetApi.INSTANCE.changePetStatus(pet.id, 1, petRemark, Integer.parseInt(petPrice), this);
         }
     }
 
     private boolean isInfoOk() {
+        petPrice = etPetPrice.getText().toString().trim();
+        if (StringUtils.isNullOrEmpty(petPrice)) {
+            shortToast("请输入宠物价格");
+            return false;
+        }
+        petRemark = etPetRemark.getText().toString().trim();
+        if (StringUtils.isNullOrEmpty(petRemark)) {
+            petRemark = "暂无备注";
+        }
         return true;
     }
 
@@ -58,5 +87,10 @@ public class ChangePetStatusActivity extends BaseActivity {
         ((Activity) context).startActivityForResult(intent, CODE_CHANGE_PET_STATUS_ACTIVITY);
     }
 
-    private void finishActivityWithResult() {}
+    private void finishActivityWithResult(boolean status) {
+        Intent intent = new Intent();
+        intent.putExtra("status", status);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

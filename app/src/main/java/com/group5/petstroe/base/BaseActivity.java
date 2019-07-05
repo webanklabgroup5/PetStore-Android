@@ -1,6 +1,7 @@
 package com.group5.petstroe.base;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,5 +35,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void longToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    protected void zlog(String msg) {
+        Log.e("ztag", msg);
     }
 }

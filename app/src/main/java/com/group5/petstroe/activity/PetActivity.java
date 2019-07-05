@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -15,8 +16,13 @@ import com.google.android.material.navigation.NavigationView;
 import com.group5.petstroe.Adapter.PetItemAdapter;
 import com.group5.petstroe.R;
 import com.group5.petstroe.apis.Result;
+import com.group5.petstroe.apis.StoreApi;
+import com.group5.petstroe.apis.UserApi;
 import com.group5.petstroe.base.BaseActivity;
-import com.group5.petstroe.models.User;
+import com.group5.petstroe.base.GlobalUser;
+import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.models.Status;
+import com.group5.petstroe.utils.ActivityUtils;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,7 +30,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
+import static com.group5.petstroe.apis.Constans.CODE_STORE_GET_ON_SALE_PET_API;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_MY_PET_ACTIVITY;
 import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_USER_SIGN_OUT_API;
+import static com.group5.petstroe.utils.ActivityUtils.CODE_PET_INFO_ACTIVITY;
 
 public class PetActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,15 +44,17 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
     private RecyclerView rvPetsList;
     private PetItemAdapter petItemAdapter = new PetItemAdapter();
 
-    private User user = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet);
-        Intent intent = getIntent();
-        user = (User)intent.getExtras().get("user");
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
     }
 
     private void initView() {
@@ -48,29 +62,75 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        (tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account)).setText(user.name);
+        tvAccount = navigationView.getHeaderView(0).findViewById(R.id.tv_account);
+        tvAccount.setText(GlobalUser.user.name);
         rvPetsList = findViewById(R.id.rv_pets_list);
-        petItemAdapter.setOnItemClickListener(new PetItemAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                PetInfoActivity.startActivityForResult(PetActivity.this, false, petItemAdapter.getPet(position));
-            }
+        petItemAdapter.setOnItemClickListener(position -> {
+            /**
+             * 跳转宠物信息页面（context，false不是从“我的宠物跳转，pet宠物对象）
+             */
+            PetInfoActivity.startActivityForResult(PetActivity.this, false, petItemAdapter.getPet(position));
         });
+        petItemAdapter.setActivity(this);
         rvPetsList.setAdapter(petItemAdapter);
         rvPetsList.setLayoutManager(new LinearLayoutManager(this));
 
         // 获取市场宠物列表
+        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case CODE_PET_INFO_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    boolean status0 = data.getBooleanExtra("status", false);
+                    /**
+                     * 购买成功，刷新列表
+                     */
+                    if (status0) {
+                        StoreApi.INSTANCE.getOnSalePet(999, 0, this);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
         switch (resultCode) {
+            /**
+             * 用户退出登录回调
+             */
+            case CODE_USER_SIGN_OUT_API:
+                if (result.isOk()) {
+                    Status status = (Status) result.get();
+                    if (status.status == 1) {
+                        finishActivityWithResult();
+                    } else {
+                        shortToast("退出登陆失败");
+                    }
+                }
+                break;
+            /**
+             * 获取市场宠物回调
+             */
+            case CODE_STORE_GET_ON_SALE_PET_API:
+                if (result.isOk()) {
+                    zlog("获取市场宠物 ok");
+                    List<Pet> pets = (List<Pet>)result.get();
+                    petItemAdapter.updateList(pets);
+                } else {
+                    zlog("获取市场宠物 error");
+                }
+                break;
             default:
                 break;
         }
@@ -82,7 +142,10 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            finishActivityWithResult();
+            /**
+             * 点击两次返回退出应用
+             */
+            ActivityUtils.finishAllActivity();
         }
     }
 
@@ -103,7 +166,7 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
                 ArbitrationActivity.startActivityForResult(this);
                 return true;
             case R.id.nav_setting:
-                shortToast("clicked");
+                UserApi.INSTANCE.signOut(this);
                 return true;
             default:
                 break;
@@ -113,15 +176,12 @@ public class PetActivity extends BaseActivity implements NavigationView.OnNaviga
         return true;
     }
 
-    public static void startActivityForResult(Context context, User user) {
+    public static void startActivityForResult(Context context) {
         Intent intent = new Intent(context, PetActivity.class);
-        intent.putExtra("user", user);
         ((Activity) context).startActivityForResult(intent, CODE_PET_ACTIVITY);
     }
 
     private void finishActivityWithResult() {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
         finish();
     }
 }

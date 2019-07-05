@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.petstroe.R;
+import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Order;
+import com.group5.petstroe.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class ArbitrationItemAdapter extends RecyclerView.Adapter<ArbitrationItem
         void onItemClick(int position);
     }
 
+    private BaseActivity activity;
     private List<Order> arbitrationList = new ArrayList<>();
     private onItemClickListener onItemClickListener;
 
@@ -57,21 +60,28 @@ public class ArbitrationItemAdapter extends RecyclerView.Adapter<ArbitrationItem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = arbitrationList.get(position);
-//        holder.tvPetName.setText(order.pet.name);
-//        holder.tvPetSpecies.setText(order.pet.getSpecies());
-//        holder.tvPetPrice.setText(order.price);
-//        holder.tvStatus.setText(order.getStatus());
+        ImageUtils.loadImageFromUrl(this.activity, holder.ivPetImage, order.pet.url);
+        holder.tvPetName.setText(order.pet.name);
+        holder.tvPetSpecies.setText(order.pet.getSpecies());
+        holder.tvPetPrice.setText(order.price +"");
+        holder.tvStatus.setText(order.getStatus());
         holder.itemView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return arbitrationList.size();
+        return arbitrationList == null ? 0 : arbitrationList.size();
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
         if (listener != null) {
             onItemClickListener = listener;
+        }
+    }
+
+    public void setActivity(BaseActivity activity) {
+        if (activity != null) {
+            this.activity = activity;
         }
     }
 

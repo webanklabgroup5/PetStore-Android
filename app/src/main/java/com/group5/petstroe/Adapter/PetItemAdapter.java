@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.petstroe.R;
+import com.group5.petstroe.base.BaseActivity;
 import com.group5.petstroe.models.Pet;
+import com.group5.petstroe.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
         TextView tvPetSpecies;
         TextView tvPetPrice;
         TextView tvPetOwner;
+        TextView tvPetStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -31,6 +34,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
             tvPetSpecies = itemView.findViewById(R.id.tv_pet_species);
             tvPetPrice = itemView.findViewById(R.id.tv_pet_price);
             tvPetOwner = itemView.findViewById(R.id.tv_pet_owner);
+            tvPetStatus = itemView.findViewById(R.id.tv_pet_status);
         }
     }
 
@@ -38,6 +42,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
         void onItemClick(int position);
     }
 
+    private BaseActivity activity = null;
     private List<Pet> petList = new ArrayList<>();
     private onItemClickListener onItemClickListener;
 
@@ -57,21 +62,29 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Pet pet = petList.get(position);
-//        holder.tvPetName.setText(pet.name);
-//        holder.tvPetSpecies.setText(pet.getSpecies());
-//        holder.tvPetPrice.setText(pet.price);
-//        holder.tvPetOwner.setText(pet.owner.name);
+        ImageUtils.loadImageFromUrl(activity, holder.ivPetImage, pet.url);
+        holder.tvPetName.setText(pet.name);
+        holder.tvPetSpecies.setText(pet.getSpecies());
+        holder.tvPetPrice.setText(pet.price + "");
+        holder.tvPetOwner.setText(pet.owner.name);
+        holder.tvPetStatus.setText(pet.getStatus());
         holder.itemView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return petList.size();
+        return petList == null ? 0 : petList.size();
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
         if (listener != null) {
             onItemClickListener = listener;
+        }
+    }
+
+    public void setActivity(BaseActivity activity) {
+        if (activity != null) {
+            this.activity = activity;
         }
     }
 

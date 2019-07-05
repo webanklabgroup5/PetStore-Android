@@ -1,11 +1,17 @@
 package com.group5.petstroe.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Order implements Serializable {
-    public int id;
+    @SerializedName("id")
+    public String id;
+    @SerializedName("price")
     public int price;
+    @SerializedName(value = "status", alternate = {"trade_status"})
     public int status;
+    @SerializedName("pet")
     public OwnerPet pet;
 
     public String getStatus() {
@@ -19,5 +25,9 @@ public class Order implements Serializable {
             default:
                 return "未知状态";
         }
+    }
+
+    public int getIntId() {
+        return Integer.parseInt(this.id);
     }
 }

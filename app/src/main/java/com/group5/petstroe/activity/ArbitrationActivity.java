@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group5.petstroe.Adapter.ArbitrationItemAdapter;
 import com.group5.petstroe.Adapter.OrderItemAdapter;
 import com.group5.petstroe.R;
+import com.group5.petstroe.apis.OrderApi;
 import com.group5.petstroe.apis.Result;
 import com.group5.petstroe.base.BaseActivity;
+import com.group5.petstroe.base.GlobalUser;
 import com.group5.petstroe.models.Order;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.group5.petstroe.utils.ActivityUtils.CODE_ARBITRATION_ACTIVITY;
+import static com.group5.petstroe.apis.Constans.CODE_ORDER_GET_ORDER_LIST_API;
 
 public class ArbitrationActivity extends BaseActivity {
 
@@ -41,18 +44,33 @@ public class ArbitrationActivity extends BaseActivity {
                 shortToast("click " + position);
             }
         });
+        arbitrationItemAdapter.setActivity(this);
         rvArbitrationList.setAdapter(arbitrationItemAdapter);
         rvArbitrationList.setLayoutManager(new LinearLayoutManager(this));
-        onUiThread(null, 0);
+
+        OrderApi.INSTANCE.getOrderList(GlobalUser.user.id, this);
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
-        List<Order> orders = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            orders.add(new Order());
+        switch (resultCode) {
+            case CODE_ORDER_GET_ORDER_LIST_API:
+                List<Order> orders = (List<Order>) result.get();
+                List<Order> arbitrations = new ArrayList<>();
+                if (orders != null) {
+                    for (Order order : orders) {
+                        if (order.status != 0) {
+                            arbitrations.add(order);
+                        }
+                    }
+                    arbitrationItemAdapter.updateList(arbitrations);
+                }
+                tvArbitrationNumber.setText(arbitrationItemAdapter.getItemCount() + "");
+                break;
+            default:
+                break;
         }
-        arbitrationItemAdapter.updateList(orders); }
+    }
 
     public static void startActivityForResult(Context context) {
         Intent intent = new Intent(context, ArbitrationActivity.class);
