@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static com.group5.petstroe.apis.Constans.CONTENT_TYPE;
 
@@ -51,8 +52,11 @@ public class GeneralClient<Req, Res> {
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            if (response.body() != null) {
-                return parse(response.body().string());
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String responseBodyString = responseBody.string();
+                Log.e("fktag", responseBodyString);
+                return parse(responseBodyString);
             } else {
                 return Result.err(response.code() + "响应无内容体");
             }
@@ -72,8 +76,11 @@ public class GeneralClient<Req, Res> {
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            if (response.body() != null) {
-                return parse(response.body().string());
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String responseBodyString = responseBody.string();
+                Log.e("fktag", responseBodyString);
+                return parse(responseBodyString);
             } else {
                 return Result.err(response.code() + "响应无内容体");
             }

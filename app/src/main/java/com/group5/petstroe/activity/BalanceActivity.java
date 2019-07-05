@@ -23,7 +23,7 @@ public class BalanceActivity extends BaseActivity {
 
     @BindView(R.id.tv_account) TextView tvAccount;
     @BindView(R.id.tv_balance) TextView tvBalance;
-    @BindView(R.id.btn_apply) Button btnApply;
+//    @BindView(R.id.btn_apply) Button btnApply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,10 @@ public class BalanceActivity extends BaseActivity {
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) { }
 
-    @OnClick(R.id.btn_apply)
-    void onClick() {
-        ApplyBalanceActivity.startActivityForResult(this);
-    }
+//    @OnClick(R.id.btn_apply)
+//    void onClick() {
+//        ApplyBalanceActivity.startActivityForResult(this);
+//    }
 
     public static void startActivityForResult(Context context) {
         Intent intent = new Intent(context, BalanceActivity.class);

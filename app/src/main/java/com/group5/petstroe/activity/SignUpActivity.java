@@ -46,6 +46,9 @@ public class SignUpActivity extends BaseActivity {
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
         switch (resultCode) {
+            /**
+             * 申请开户回调
+             */
             case CODE_USER_SIGN_UP_API:
                 shortToast("请求已发送！");
                 finishActivityWithResult();
@@ -58,6 +61,9 @@ public class SignUpActivity extends BaseActivity {
     @OnClick(R.id.btn_sign_up)
     void onClick(View view) {
         switch (view.getId()) {
+            /**
+             * 点击申请开户
+             */
             case R.id.btn_sign_up:
                 if (isInfoOk()) {
                     UserApi.INSTANCE.signUp(account, balance, password, this);
@@ -68,6 +74,10 @@ public class SignUpActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 判断开户申请信息是否有效
+     * @return
+     */
     private boolean isInfoOk() {
         account = etAccount.getText().toString().trim();
         if (StringUtils.isNullOrEmpty(account)) {
@@ -98,7 +108,6 @@ public class SignUpActivity extends BaseActivity {
     public static void startActivityForResult(Context context) {
         ((Activity) context).startActivityForResult(new Intent(context, SignUpActivity.class), CODE_SIGN_UP_ACTIVITY);
     }
-
     private void finishActivityWithResult() {
         finish();
     }

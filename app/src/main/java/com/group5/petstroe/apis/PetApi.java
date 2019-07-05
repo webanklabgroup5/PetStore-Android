@@ -48,9 +48,13 @@ public enum  PetApi {
                         .encodedPath(PATH_APP_UPLOAD_FILE)
                         .build();
                 GeneralClient<UploadFileForm, UrlStatus> client = new GeneralClient<>(url, UploadFileForm.class, UrlStatus.class);
-                Result<UrlStatus> result = client.post(new UploadFileForm(file));
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                UploadFileForm postForm = new UploadFileForm(file);
+                Result<UrlStatus> result = client.post(postForm);
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 activity.runOnUiThread(result, CODE_APP_UPLOAD_FILE_API);
             }
         });
@@ -79,9 +83,13 @@ public enum  PetApi {
                     .encodedPath(PATH_CREATE_PET)
                     .build();
             GeneralClient<CreatePetForm, Status> client = new GeneralClient<>(url, CreatePetForm.class, Status.class);
-            Result<Status> result = client.post(new CreatePetForm(name, species, photo, birthday, description));
-            Log.e("fktag", "url:" + url.toString());
-            Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+            CreatePetForm postForm = new CreatePetForm(name, species, photo, birthday, description);
+            Result<Status> result = client.post(postForm);
+            {
+                Log.e("fktag", "url:" + url.toString());
+                Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+            }
             activity.runOnUiThread(result, CODE_PET_CREATE_PET_API);
         });
     }
@@ -110,9 +118,13 @@ public enum  PetApi {
                         .encodedPath(PATH_CHANGE_PET_STATUS)
                         .build();
                 GeneralClient<ChangePetStatusForm, Status> client = new GeneralClient<>(url, ChangePetStatusForm.class, Status.class);
-                Result<Status> result = client.post(new ChangePetStatusForm(pet_id, action, remark, price));
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                ChangePetStatusForm postForm = new ChangePetStatusForm(pet_id, action, remark, price);
+                Result<Status> result = client.post(postForm);
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 activity.runOnUiThread(result, CODE_PET_CHANGE_PET_STATUS_API);
             }
         });
@@ -136,8 +148,10 @@ public enum  PetApi {
                         .build();
                 GeneralClient<Object, GetPetListResultForm> client = new GeneralClient<>(url, null, GetPetListResultForm.class);
                 Result<GetPetListResultForm> result = client.get();
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().pet_list), CODE_PET_GET_PET_LIST_API);
                 } else {

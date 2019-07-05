@@ -42,8 +42,10 @@ public enum StoreApi {
                         .build();
                 GeneralClient<Object, GetOnSalePetResultForm> client = new GeneralClient<>(url, null, GetOnSalePetResultForm.class);
                 Result<GetOnSalePetResultForm> result = client.get();
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().pet_list), CODE_STORE_GET_ON_SALE_PET_API);
                 } else {
@@ -70,9 +72,13 @@ public enum StoreApi {
                         .encodedPath(PATH_BUY_PET)
                         .build();
                 GeneralClient<BuyPetForm, Status> client = new GeneralClient<>(url, BuyPetForm.class, Status.class);
-                Result<Status> result = client.post(new BuyPetForm(id));
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                BuyPetForm postForm = new BuyPetForm(id);
+                Result<Status> result = client.post(postForm);
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 activity.runOnUiThread(result, CODE_STORE_BUY_PET_API);
             }
         });

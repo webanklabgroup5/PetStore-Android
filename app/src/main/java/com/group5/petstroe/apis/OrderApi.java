@@ -42,8 +42,10 @@ public enum OrderApi {
                         .build();
                 GeneralClient<Object, GetOrderListResultForm> client = new GeneralClient<>(url, null, GetOrderListResultForm.class);
                 Result<GetOrderListResultForm> result = client.get();
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 if (result.isOk()) {
                     activity.runOnUiThread(Result.ok(result.get().trade_list), CODE_ORDER_GET_ORDER_LIST_API);
                 } else {
@@ -70,9 +72,13 @@ public enum OrderApi {
                         .encodedPath(PATH_ARBITRATION)
                         .build();
                 GeneralClient<ArbitrationForm, Status> client = new GeneralClient<>(url, null, Status.class);
-                Result<Status> result = client.post(new ArbitrationForm(id));
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                ArbitrationForm postForm = new ArbitrationForm(id);
+                Result<Status> result = client.post(postForm);
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag", "request:" + (new Gson()).toJson(postForm));
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 activity.runOnUiThread(result, CODE_ORDER_ARBITRATION_API);
             }
         });
@@ -92,8 +98,10 @@ public enum OrderApi {
                         .build();
                 GeneralClient<Object, Order> client = new GeneralClient<>(url, null, Order.class);
                 Result<Order> result = client.get();
-                Log.e("fktag", "url:" + url.toString());
-                Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                {
+                    Log.e("fktag", "url:" + url.toString());
+                    Log.e("fktag",  "response:" + (new Gson()).toJson(result.get()));
+                }
                 activity.runOnUiThread(result, CODE_ORDER_GET_ARBITRATION_LIST_API);
             }
         });

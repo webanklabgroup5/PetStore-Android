@@ -41,18 +41,23 @@ public class SignInActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(SignInActivity.this);
-        etAccount.setText("mzw");
-        etPassword.setText("mzwmzw");
+        etAccount.setText("zpf");
+        etPassword.setText("zpfzpf");
     }
 
     @Override
     protected <T> void onUiThread(Result<T> result, int resultCode) {
         switch (resultCode) {
+            /**
+             * 登录回调
+             */
             case CODE_USER_SIGN_IN_API:
                 if (result.isOk()) {
+                    zlog("sign in result ok");
                     GlobalUser.user = (User) result.get();
-                    Log.e("fktag", GlobalUser.user.toString());
                     finishActivityWithResult();
+                } else {
+                    zlog("sign in result error");
                 }
                 break;
             default:
@@ -63,11 +68,17 @@ public class SignInActivity extends BaseActivity {
     @OnClick({R.id.btn_sign_in, R.id.tv_sign_up})
     void onClick(View view) {
         switch (view.getId()) {
+            /**
+             * 点击登录
+             */
             case R.id.btn_sign_in:
                 if (isInfoOk()) {
                     UserApi.INSTANCE.signIn(account, password, this);
                 }
                 break;
+            /**
+             * 点击跳转开户页面
+             */
             case R.id.tv_sign_up:
                 SignUpActivity.startActivityForResult(this);
                 break;
@@ -76,6 +87,10 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 判断登录信息是否有效
+     * @return
+     */
     private boolean isInfoOk() {
         account = etAccount.getText().toString().trim();
         if (StringUtils.isNullOrEmpty(account)) {
@@ -106,8 +121,6 @@ public class SignInActivity extends BaseActivity {
     }
 
     private void finishActivityWithResult() {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
         finish();
     }
 }

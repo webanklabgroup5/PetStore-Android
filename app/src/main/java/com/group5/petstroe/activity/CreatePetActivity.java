@@ -101,17 +101,23 @@ public class CreatePetActivity extends BaseActivity {
         switch (resultCode) {
             case CODE_APP_UPLOAD_FILE_API:
                 if (result.isOk()) {
+                    zlog("上传图片 ok");
                     UrlStatus urlStatus = (UrlStatus) result.get();
                     petImageUrl = urlStatus.url;
                     if (StringUtils.isNotNullOrEmpty(petImageUrl)) {
                         ivPetImage.setImageBitmap(petImageBitmap);
                     }
+                } else {
+                    zlog("上传图片 error");
                 }
                 break;
             case CODE_PET_CREATE_PET_API:
                 if (result.isOk()) {
+                    zlog("创建宠物 ok");
                     Status status = (Status) result.get();
                     finishActivityWithResult(status.status == 1);
+                } else {
+                    zlog("创建宠物 error");
                 }
                 break;
             default:

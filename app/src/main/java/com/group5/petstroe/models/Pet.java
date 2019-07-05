@@ -49,7 +49,7 @@ public class Pet implements Serializable {
     public String getStatus() {
         switch (this.status) {
             case 0:
-                return "下架";
+                return "下架中";
             case 1:
                 return "上架";
             default:

@@ -41,7 +41,7 @@ public class ChangePetStatusActivity extends BaseActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
         pet = (Pet)intent.getExtras().get("pet");
-        etPetPrice.setText(pet.price);
+        etPetPrice.setText(pet.price + "");
     }
 
     @Override
@@ -49,8 +49,11 @@ public class ChangePetStatusActivity extends BaseActivity {
         switch (resultCode) {
             case CODE_PET_CHANGE_PET_STATUS_API:
                 if (result.isOk()) {
+                    zlog("上架宠物 ok");
                     Status status = (Status) result.get();
                     finishActivityWithResult(status.status == 1);
+                } else {
+                    zlog("上架宠物 error");
                 }
                 break;
             default:
@@ -61,7 +64,7 @@ public class ChangePetStatusActivity extends BaseActivity {
     @OnClick(R.id.btn_sale)
     void onClick() {
         if (isInfoOk()) {
-            PetApi.INSTANCE.changePetStatus(pet.id, 1, pet.remark, pet.price, this);
+            PetApi.INSTANCE.changePetStatus(pet.id, 1, petRemark, Integer.parseInt(petPrice), this);
         }
     }
 

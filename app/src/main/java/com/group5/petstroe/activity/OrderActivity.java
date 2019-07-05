@@ -40,15 +40,13 @@ public class OrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         ButterKnife.bind(this);
-        orderItemAdapter.setOnItemClickListener(new OrderItemAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                showDialog();
-            }
-        });
+        orderItemAdapter.setOnItemClickListener(position -> showDialog());
         rvOrderList.setAdapter(orderItemAdapter);
         rvOrderList.setLayoutManager(new LinearLayoutManager(this));
 
+        /**
+         * 获取用户订单
+         */
         OrderApi.INSTANCE.getOrderList(GlobalUser.user.id, this);
     }
 

@@ -42,12 +42,12 @@
                 android:textSize="20dp"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_apply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="申请积分"/>
+        <!--<Button-->
+            <!--android:id="@+id/btn_apply"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="申请积分"/>-->
     </LinearLayout>
 
 </RelativeLayout>

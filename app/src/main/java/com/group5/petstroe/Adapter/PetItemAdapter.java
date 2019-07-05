@@ -23,6 +23,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
         TextView tvPetSpecies;
         TextView tvPetPrice;
         TextView tvPetOwner;
+        TextView tvPetStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -31,6 +32,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
             tvPetSpecies = itemView.findViewById(R.id.tv_pet_species);
             tvPetPrice = itemView.findViewById(R.id.tv_pet_price);
             tvPetOwner = itemView.findViewById(R.id.tv_pet_owner);
+            tvPetStatus = itemView.findViewById(R.id.tv_pet_status);
         }
     }
 
@@ -61,6 +63,7 @@ public class PetItemAdapter extends RecyclerView.Adapter<PetItemAdapter.ViewHold
         holder.tvPetSpecies.setText(pet.getSpecies());
         holder.tvPetPrice.setText(pet.price + "");
         holder.tvPetOwner.setText(pet.owner.name);
+        holder.tvPetStatus.setText(pet.getStatus());
         holder.itemView.setTag(position);
     }
 
